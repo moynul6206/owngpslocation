@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GPS Location Data</title>
+  <style>
+    #map {
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+  <script>
+    function initMap() {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    }
+
+    function showPosition(position) {
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
+
+      // Display the location on the map (using Google Maps API)
+      const map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: latitude, lng: longitude },
+        zoom: 14,
+      });
+
+      const marker = new google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: map,
+        title: "Your Location",
+      });
+
+      // Display the latitude and longitude information on the page
+      document.getElementById("latitude").textContent = "Latitude: " + latitude;
+      document.getElementById("longitude").textContent = "Longitude: " + longitude;
+    }
+
+    function showError(error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          alert("User denied the request for Geolocation.");
+          break;
+        case error.POSITION_UNAVAILABLE:
+          alert("Location information is unavailable.");
+          break;
+        case error.TIMEOUT:
+          alert("The request to get user location timed out.");
+          break;
+        case error.UNKNOWN_ERROR:
+          alert("An unknown error occurred.");
+          break;
+      }
+    }
+  </script>
+</head>
+<body onload="initMap()">
+  <h1>Your GPS Location</h1>
+  <div id="map"></div>
+  <p id="latitude"></p>
+  <p id="longitude"></p>
+
+  <!-- Load the Google Maps API -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDnIux3Vl6FbBhgkppohCDBqXcmNGn4jjU&callback=initMap"
+    async
+    defer
+  ></script>
+</body>
+</html>
